@@ -1,5 +1,5 @@
 import "modern-normalize";
-import "tailwindcss";
+import "./styles.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import ModalFormPage from "./ModalFormPage";
