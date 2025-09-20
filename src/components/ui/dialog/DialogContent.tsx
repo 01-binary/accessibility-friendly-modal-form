@@ -2,6 +2,7 @@ import {
   forwardRef,
   useCallback,
   useEffect,
+  useState,
   type ComponentPropsWithoutRef,
   type KeyboardEvent,
   type FocusEvent,
@@ -37,6 +38,9 @@ export const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
   ) => {
     const { open, onOpenChange, titleId, descriptionId, contentRef, modal } =
       useDialog();
+
+    // z-index를 한 번만 생성
+    const [zIndex] = useState(() => getNextZIndex());
 
     if (!forceMount && !open) return null;
 
@@ -106,7 +110,7 @@ export const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
         onKeyDown={handleKeyDown}
         style={{
           position: 'fixed',
-          zIndex: getNextZIndex(),
+          zIndex: zIndex,
         }}
         {...props}
       />

@@ -1,6 +1,7 @@
 import {
   forwardRef,
   useCallback,
+  useState,
   type ComponentPropsWithoutRef,
   type MouseEvent,
 } from 'react';
@@ -15,6 +16,9 @@ interface DialogOverlayProps extends ComponentPropsWithoutRef<'div'> {
 export const DialogOverlay = forwardRef<HTMLDivElement, DialogOverlayProps>(
   ({ forceMount, ...props }, forwardedRef) => {
     const { open, onOpenChange, modal } = useDialog();
+
+    // z-index를 한 번만 생성
+    const [zIndex] = useState(() => getNextZIndex());
 
     if (!forceMount && !open) return null;
 
@@ -36,7 +40,7 @@ export const DialogOverlay = forwardRef<HTMLDivElement, DialogOverlayProps>(
         style={{
           position: 'fixed',
           inset: 0,
-          zIndex: getNextZIndex(),
+          zIndex: zIndex,
         }}
         {...props}
       />
