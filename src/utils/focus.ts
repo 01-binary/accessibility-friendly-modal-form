@@ -20,9 +20,15 @@ export const FOCUSABLE_ELEMENT_SELECTORS = [
 
 // Get all focusable elements within a container
 export const getFocusableElements = (container: HTMLElement): HTMLElement[] => {
-  return Array.from(
-    container.querySelectorAll(FOCUSABLE_ELEMENT_SELECTORS)
-  ) as HTMLElement[];
+  const nodeList = container.querySelectorAll(FOCUSABLE_ELEMENT_SELECTORS);
+  const result: HTMLElement[] = [];
+  for (let i = 0; i < nodeList.length; i++) {
+    const element = nodeList[i];
+    if (element instanceof HTMLElement) {
+      result.push(element);
+    }
+  }
+  return result;
 };
 
 // Get the first focusable element in a container
