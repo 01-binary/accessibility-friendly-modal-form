@@ -47,8 +47,23 @@ export const useFocusTrap = (
       }
     };
 
-    // Set initial focus
-    setTimeout(() => focusElement(container), 0);
+    // Set initial focus - prioritize title element for accessibility
+    setTimeout(() => {
+      // Try to focus on title first (h1, h2, [aria-labelledby])
+      const titleElement = container.querySelector('h1, h2, h3, [role="heading"]') as HTMLElement;
+      if (titleElement && titleElement.getAttribute('tabindex') !== '-1') {
+        titleElement.setAttribute('tabindex', '-1');
+        titleElement.focus();
+      } else {
+        // Fallback to first focusable element or container
+        const focusableElements = getFocusableElements(container);
+        if (focusableElements.length > 0) {
+          focusableElements[0]?.focus();
+        } else {
+          focusElement(container);
+        }
+      }
+    }, 0);
 
     document.addEventListener('keydown', handleKeyDown);
 
