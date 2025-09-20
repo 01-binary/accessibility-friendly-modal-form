@@ -20,6 +20,29 @@ export const JobApplicationModalForm = ({
 }: JobApplicationModalFormProps) => {
   const { options, id } = modal;
   const [errorAnnouncement, setErrorAnnouncement] = useState<string>('');
+  const [isOpen, setIsOpen] = useState(true);
+
+  // 취소 핸들러
+  const handleCancel = () => {
+    console.log('🔥 handleCancel called!');
+    setIsOpen(false);
+    setTimeout(() => {
+      console.log('🔥 onClose called after timeout');
+      onClose(id, null);
+    }, 150);
+  };
+
+  // 전역 키보드 이벤트 리스너 (ESC 키 핸들링)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleCancel();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleCancel]);
 
   // react-hook-form 설정
   const {
@@ -109,11 +132,6 @@ export const JobApplicationModalForm = ({
     }
   };
 
-  // 취소 핸들러
-  const handleCancel = () => {
-    onClose(id, null);
-  };
-
   // 유효성 검증 규칙 생성
   const getValidationRules = (field: keyof JobApplicationFormData) => {
     const rules = options.validation?.[field];
@@ -172,7 +190,13 @@ export const JobApplicationModalForm = ({
         {errorAnnouncement}
       </div>
 
-      <Modal open={true} onOpenChange={(open) => !open && handleCancel()}>
+      <Modal
+        open={isOpen}
+        onOpenChange={(open) => {
+          console.log('🔥 Modal onOpenChange called, open:', open);
+          !open && handleCancel();
+        }}
+      >
         {/* X 버튼 */}
         <Modal.Close asChild>
           <button
