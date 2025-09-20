@@ -24,25 +24,9 @@ export const JobApplicationModalForm = ({
 
   // 취소 핸들러
   const handleCancel = () => {
-    console.log('🔥 handleCancel called!');
     setIsOpen(false);
-    setTimeout(() => {
-      console.log('🔥 onClose called after timeout');
-      onClose(id, null);
-    }, 150);
+    setTimeout(() => onClose(id, null), 150);
   };
-
-  // 전역 키보드 이벤트 리스너 (ESC 키 핸들링)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        handleCancel();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleCancel]);
 
   // react-hook-form 설정
   const {
@@ -108,7 +92,9 @@ export const JobApplicationModalForm = ({
       }
 
       if (options.validation?.experience?.custom) {
-        const experienceError = options.validation.experience.custom(data.experience);
+        const experienceError = options.validation.experience.custom(
+          data.experience
+        );
         if (experienceError) {
           setError('experience', { message: experienceError });
           hasErrors = true;
@@ -192,10 +178,8 @@ export const JobApplicationModalForm = ({
 
       <Modal
         open={isOpen}
-        onOpenChange={(open) => {
-          console.log('🔥 Modal onOpenChange called, open:', open);
-          !open && handleCancel();
-        }}
+        onOpenChange={(open) => !open && handleCancel()}
+        onEscapeKeyDown={handleCancel}
       >
         {/* X 버튼 */}
         <Modal.Close asChild>
@@ -349,7 +333,7 @@ export const JobApplicationModalForm = ({
               )}
             </div>
 
-            <Modal.Footer className="flex justify-end space-x-3 pt-4">
+            <Modal.Footer className="flex justify-end gap-3 pt-4">
               <button
                 type="button"
                 onClick={handleCancel}

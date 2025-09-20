@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, KeyboardEvent } from 'react';
 import { Dialog } from '../dialog';
 
 interface ModalProps {
@@ -6,6 +6,7 @@ interface ModalProps {
   onOpenChange: (open: boolean) => void;
   children: ReactNode;
   className?: string;
+  onEscapeKeyDown?: (event: KeyboardEvent<Element>) => void;
 }
 
 export const Modal = ({
@@ -13,12 +14,14 @@ export const Modal = ({
   onOpenChange,
   children,
   className,
+  onEscapeKeyDown,
 }: ModalProps) => {
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/30 motion-safe:transition-opacity motion-safe:duration-200" />
         <Dialog.Content
+          onEscapeKeyDown={onEscapeKeyDown}
           className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out ${
             className || ''
           }`}
